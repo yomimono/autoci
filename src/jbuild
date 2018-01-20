@@ -1,0 +1,78 @@
+(jbuild_version 1)
+
+(library
+  ((name files)
+   (wrapped false)
+   (modules (files))
+   (libraries (bos fpath opam-format))))
+
+(library
+  ((name test)
+  (wrapped false)
+  (modules (test parse_env))
+  (libraries (astring bos fmt opam-format rresult yaml))))
+
+(library
+  ((name appveyor)
+  (wrapped false)
+  (modules (appveyor))
+  (libraries (fmt opam-format test yaml))))
+
+(library
+  ((name travis)
+  (wrapped false)
+  (modules (travis))
+  (libraries (fmt opam-format test yaml))))
+
+(library
+  ((name opam)
+   (wrapped false)
+   (modules (opam))
+   (libraries (astring files fpath opam-format opam-state test))))
+
+(executable
+  ((name lint)
+   (modules (consistency lint))
+   (public_name lint)
+   (libraries (astring bos cmdliner files fpath fmt opam opam-format test))))
+
+(executable
+  ((name autotravis)
+  (modules (autotravis))
+  (public_name autotravis)
+  (libraries (astring bos cmdliner files fpath fmt opam opam-format test travis))))
+
+(executable
+  ((name autoappveyor)
+  (modules (autoappveyor))
+  (public_name autoappveyor)
+  (libraries (appveyor bos cmdliner fmt opam test))))
+
+(executable
+  ((name travis_to_appveyor)
+  (modules (travis_to_appveyor))
+  (public_name travis_to_appveyor)
+  (libraries (appveyor bos cmdliner opam test yaml))))
+
+(alias
+ ((name runtest)
+  (deps (lint.exe (files_recursively_in "../test")))
+  (action (progn
+    (run ${exe:autotravis.exe} -C "../test/no-tests")
+    (run ${exe:autotravis.exe} -C "../test/package-not-in-matrix")
+    (run ${exe:autotravis.exe} -C "../test/tests-not-built")
+    (run ${exe:autotravis.exe} -C "../test/tests-not-run")
+    (run ${exe:autoappveyor.exe} -C "../test/no-tests")
+    (run ${exe:autoappveyor.exe} -C "../test/package-not-in-matrix")
+    (run ${exe:autoappveyor.exe} -C "../test/tests-not-built")
+    (run ${exe:autoappveyor.exe} -C "../test/tests-not-run")
+    (run ${exe:travis_to_appveyor.exe} --travis "../test/no-tests/.travis.yml")
+    (run ${exe:travis_to_appveyor.exe} --travis "../test/package-not-in-matrix/.travis.yml")
+    (run ${exe:travis_to_appveyor.exe} --travis "../test/tests-not-built/.travis.yml")
+    (run ${exe:travis_to_appveyor.exe} --travis "../test/tests-not-run/.travis.yml")
+    (system "./lint.exe -C ../test/no-tests || true")
+    (system "./lint.exe -C ../test/package-not-in-matrix || true")
+    (system "./lint.exe -C ../test/tests-not-built || true")
+    (system "./lint.exe -C ../test/tests-not-run || true")
+  ))
+))

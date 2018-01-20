@@ -2,7 +2,7 @@ opam-version: "2.0"
 version: "0.1"
 synopsis: "Generate cloud-based CI config for OCaml projects"
 description: """
-autotravis consults information in opam files and other build data to automatically generate CI invocations for OCaml projects.  It makes use of OCaml CI helpers at https://github.com/ocaml/ocaml-ci-scripts .  It is also intended to have some linting functionality, for use in managing CI configurations across multi-repository projects.
+Consults information in opam files and other build data to automatically generate CI invocations for OCaml projects.  It makes use of OCaml CI helpers at https://github.com/ocaml/ocaml-ci-scripts .  It is also intended to have some linting functionality, for use in managing CI configurations across multi-repository projects.
 """
 maintainer: "Mindy Preston <meetup@yomimono.org>"
 authors: "Mindy Preston <meetup@yomimono.org>"
@@ -12,14 +12,17 @@ bug-reports: "https://github.com/yomimono/autoci/issues"
 build: [
   ["jbuilder" "build" "-p" name ]
 ]
-install: [make "install"]
 dev-repo: "git+https://github.com/yomimono/autoci.git"
 depends: [
   "jbuilder" {build}
-  "opam-file-format"
-  "opam-format"
+  "topkg-jbuilder" {build}
   "astring"
   "bos"
   "cmdliner"
+  "fmt"
   "fpath"
+  "ocaml" {>= "4.03.0"}
+  "opam-format"
+  "opam-state"
+  "yaml"
 ]
