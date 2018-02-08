@@ -1,0 +1,17 @@
+language: c
+sudo: false
+services:
+  - docker
+install: wget https://raw.githubusercontent.com/ocaml/ocaml-travisci-skeleton/master/.travis-docker.sh
+script: bash ./.travis-docker.sh
+env:
+ global:
+   - FORK_USER="yomimono" FORK_BRANCH="always_depext"
+   - PINS="mirage-dns:. dns-async:. dns-lwt:. dns-lwt-unix:."
+   - PACKAGE="dns"
+   - DEPOPTS="mirage-dns dns-async dns-lwt dns-lwt-unix"
+ matrix:
+   - DISTRO=debian-stable OCAML_VERSION=4.03.0
+   - DISTRO=debian-testing OCAML_VERSION=4.04.1
+   - DISTRO=ubuntu-16.04 OCAML_VERSION=4.03.0
+   - DISTRO=alpine-3.5 OCAML_VERSION=4.04.1

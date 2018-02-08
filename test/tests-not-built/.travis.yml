@@ -1,0 +1,13 @@
+language: c
+sudo: false
+services:
+  - docker
+install: wget https://raw.githubusercontent.com/ocaml/ocaml-travisci-skeleton/master/.travis-docker.sh
+script: bash -ex ./.travis-docker.sh
+env:
+  global:
+  - EXTRA_REMOTES="https://github.com/djs55/opam-repository.git#io-page"
+  - PACKAGE="fat-filesystem"
+  matrix:
+  - DISTRO="debian-testing" OCAML_VERSION="4.03.0"
+  - DISTRO="alpine-3.5" OCAML_VERSION="4.04.0"
