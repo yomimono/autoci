@@ -17,17 +17,11 @@ let make_appveyor dir opams =
   let tests_of_opam o =
     let compilers = Opam.compilers_of_opam o |> List.map snd in
     let test compiler =
-      let switch = {
-        Appveyor.version = OpamPackage.version compiler;
-        Appveyor.port = Mingw; (* default from ocaml-ci-scripts *)
-        width = SixtyFour; (* also default *)
-        precompiled = true; (* I presume this is the case? *)
-      } in
       { Test.depopts = List [];
         revdeps = List [];
         distro = None;
         do_test = None;
-        compiler = Some (Opam_switch (Format.asprintf "%a" Appveyor.pp_switch switch));
+        compiler = Some (Opam_switch ((OpamPackage.version_to_string compiler) ^ "+mingw64c"));
         package = Some (OpamPackage.Name.to_string @@ OpamFile.OPAM.name o)
       }
     in
