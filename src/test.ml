@@ -184,7 +184,6 @@ let test_info_to_var_string info =
   in
   let pp_revdeps = pp_revdepopts_with_label ~label:"REVDEPS" in
   let pp_depopts = pp_revdepopts_with_label ~label:"DEPOPTS" in
-  (* TODO: I am absolutely certain there is a better Fmt combinator for this *)
   let pp_env_option ~name fmt = function
     | None -> ()
     | Some value -> Fmt.pf fmt "@[%s=\"%s\"@] " name value
