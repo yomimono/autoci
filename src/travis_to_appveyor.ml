@@ -31,7 +31,7 @@ let nullify_distro t = Test.({t with distro = None})
 let make_appveyor travis =
   let open Rresult.R in
   Bos.OS.File.read (Fpath.v travis) >>= Yaml.yaml_of_string >>=
-  Test.of_yaml >>= fun config ->
+  Travis.of_yaml >>= fun config ->
   switch_of_version config.globals >>= fun globals ->
   let globals = nullify_distro globals in
   List.fold_left (fun acc test -> match acc, switch_of_version test with

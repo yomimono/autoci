@@ -34,7 +34,7 @@
   ((name lint)
    (modules (consistency lint))
    (public_name lint)
-   (libraries (astring bos cmdliner files fpath fmt opam opam-format test))))
+   (libraries (astring bos cmdliner files fpath fmt opam opam-format test travis))))
 
 (executable
   ((name autotravis)
@@ -52,7 +52,7 @@
   ((name travis_to_appveyor)
   (modules (travis_to_appveyor))
   (public_name travis_to_appveyor)
-  (libraries (appveyor bos cmdliner opam test yaml))))
+  (libraries (appveyor bos cmdliner opam test travis yaml))))
 
 (alias
  ((name runtest)

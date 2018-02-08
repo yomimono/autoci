@@ -31,7 +31,7 @@ let lint debug dir travis opams =
       Fmt.(list ~sep:sp (of_to_string OpamFile.OPAM.write_to_string)) opams
   end;
   Bos.OS.File.read (Fpath.(dir // v travis)) >>= Yaml.yaml_of_string
-  >>= Test.of_yaml >>= fun travis ->
+  >>= Travis.of_yaml >>= fun travis ->
   (* does each package in opams have a line in the test matrix? *)
   let packages_in_matrix =
     match Consistency.all_packages_in_matrix debug travis opams with

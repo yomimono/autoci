@@ -74,11 +74,3 @@ val tests_matching_package_name : package:OpamPackage.Name.t -> config:t ->
     If the matrix is empty but [package] will be tested as part of a global run,
     [`Global] will be returned, and the user is encouraged to refer to
     [travis.globals] for further details about the test matching [package]. *)
-
-val of_yaml : Yaml.yaml -> (t, [> `Msg of string]) result
-(** [of_yaml yaml] does its best to interpret [yaml] as a set of Travis build
-    instructions. *)
-
-(* the expected to_yaml is missing. The intended end user matters, so it is
-   expected that a particular configuration generator will implement this
-   themselves (e.g. autotravis, autoappveyor in the same repository). *)
