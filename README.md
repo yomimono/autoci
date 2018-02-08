@@ -10,7 +10,7 @@ A few tools for automatically handling cloud CI tests for projects that use `opa
 * For a given repository, you want to ensure that:
   * each package with an opam file in the repository will have its installation tested by cloud CI
   * each package with defined tests will have those tests run by cloud CI
-  * each package with optional dependencies will test its installation in the presence of all optional dependencies
+  * each package with declared test dependencies has tests which cloud CI might know how to run
 
 ## How do I use it?
 
@@ -23,7 +23,7 @@ Command-line tools expose a `--help` option which is most likely to be up-to-dat
 Both tools can take arguments for `opam` files and cloud CI configurations to consider; if those arguments are omitted, they will attempt to discover them in the current directory.  For example, one might use `autotravis` to generate a Travis CI configuration for `autoci` itself:
 
 ```
-4.05.0+afl🐫  (primary) 13.29 mirageos:~/autoci$ _build/default/src/autotravis.exe 
+🐫  ~/autoci$ _build/default/src/autotravis.exe 
 language: c
 install: wget https://raw.githubusercontent.com/ocaml/ocaml-ci-scripts/master/.travis-docker.sh
 script: bash -ex .travis-docker.sh
@@ -43,6 +43,6 @@ env:
 or use `lint` to check whether a complex project is testing everything it should be:
 
 ```
-4.05.0+afl🐫  ((detached from origin/master)) 13.30 mirageos:~/mirage-net-xen$ ~/autoci/_build/default/src/lint.exe 
+🐫  ~/mirage-net-xen$ ~/autoci/_build/default/src/lint.exe 
 Packages whose installation is not tested (add them to the matrix): netchannel
 ```
