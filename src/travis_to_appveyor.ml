@@ -53,7 +53,7 @@ let () =
   let open Cmdliner.Term in
   match eval (make_t, make_info) with
       | `Ok (Error (`Msg e)) -> Printf.eprintf "%s\n%!" e; exit_status (`Ok 1)
-      | `Ok (Ok s) -> Printf.printf "%s\n%!" s; exit_status (`Ok 0)
+      | `Ok (Ok s) -> Printf.printf "%s%!" s; exit_status (`Ok 0)
       | `Error _ as a -> exit_status a
       | `Version -> exit_status `Version
       | `Help -> exit_status `Help
