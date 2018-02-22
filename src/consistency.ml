@@ -13,7 +13,7 @@ let test_deps_imply_buildable_test opam =
   let has_test_dep opam =
     let depends = OpamFile.OPAM.depends opam in
     OpamFilter.variables_of_filtered_formula depends |> List.exists (fun variable ->
-	Astring.String.equal (OpamVariable.Full.to_string variable) "with-test")
+        Astring.String.equal (OpamVariable.Full.to_string variable) "with-test")
   in
   (* if so, is there a with-test stanza in the build instructions? *)
   match has_test_dep opam with

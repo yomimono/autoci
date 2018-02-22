@@ -8,11 +8,11 @@ let opams =
 let travis =
   let doc = "yaml file containing Test configuration to consider when linting." in
   Cmdliner.Arg.(value & opt file ".travis.yml" & info ["travis"]
-		  ~docv:"TRAVIS" ~doc)
+                  ~docv:"TRAVIS" ~doc)
 
 let dir =
   let doc = "directory in which to search for files.  If both OPAM and TRAVIS \
-	     have been specified by the user, this will have no effect." in
+             have been specified by the user, this will have no effect." in
   Cmdliner.Arg.(value & opt dir "." & info ["C"; "directory"] ~docv:"DIRECTORY" ~doc)
 
 let debug =

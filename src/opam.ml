@@ -37,9 +37,9 @@ let has_build_tests opam =
        we're interested in whether any items have a filter called "test" or
        "with-test" or some such. *)
     List.exists (fun (_args, filter) -> match filter with
-	| Some (OpamTypes.FIdent ([], var, _)) -> Astring.String.equal "with-test" @@
-	  OpamVariable.to_string var
-	| _ -> false
+        | Some (OpamTypes.FIdent ([], var, _)) -> Astring.String.equal "with-test" @@
+          OpamVariable.to_string var
+        | _ -> false
       ) build
   with
   | Failure _ -> false (* no build stanza means no build tests *)

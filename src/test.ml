@@ -53,7 +53,7 @@ let package_is_installed ~package ~config =
     | _ -> match config.globals.depopts with
       | List depopts when List.mem package depopts -> true
       | _ -> match config.globals.revdeps with
-	| List revdeps when List.mem package revdeps -> true
+        | List revdeps when List.mem package revdeps -> true
         | _ -> false
   in
   let is_installed_from_matrix_entry entry =
@@ -62,7 +62,7 @@ let package_is_installed ~package ~config =
       | Some v when Astring.String.equal v (OpamPackage.Name.to_string package) -> true
       | Some _ -> false
       | None -> match config.globals.package with
-	  | Some v when Astring.String.equal v (OpamPackage.Name.to_string package) -> true
+          | Some v when Astring.String.equal v (OpamPackage.Name.to_string package) -> true
           | _ -> false
     in
     let depopts_matches =
@@ -71,7 +71,7 @@ let package_is_installed ~package ~config =
       | List depopts when List.mem package depopts -> true
       | List (_::_) -> false
       | List [] -> match config.globals.depopts with
-	| List depopts when List.mem package depopts -> true
+        | List depopts when List.mem package depopts -> true
         | _ -> false
     in
     let revdeps_matches =
@@ -80,7 +80,7 @@ let package_is_installed ~package ~config =
       | List revdeps when List.mem package revdeps -> true
       | List (_::_) -> false
       | List [] -> match config.globals.revdeps with
-	| List revdeps when List.mem package revdeps -> true
+        | List revdeps when List.mem package revdeps -> true
         | _ -> false
     in
     package_matches || depopts_matches || revdeps_matches
@@ -119,13 +119,13 @@ let tests_matching_package_name ~package ~config =
     | [] -> match config.globals.do_test with
       | Some false -> false
       | Some true | None ->
-	match config.globals.package with
-	| None -> false
+        match config.globals.package with
+        | None -> false
         | Some v -> Astring.String.equal (OpamPackage.Name.to_string package) v
   in
   let matches ~default =
     List.filter (fun test -> match test.package with
-	| Some str -> name_eq ~str package
+        | Some str -> name_eq ~str package
         | None -> default) config.tests
   in
   let hits = 
@@ -133,7 +133,7 @@ let tests_matching_package_name ~package ~config =
     | None -> matches ~default:false
     | Some str when not (name_eq ~str package) -> matches ~default:false
     | Some _ -> (* the tests are those in the matrix which have no name, or have a
-		   name matching that passed in *)
+                   name matching that passed in *)
       matches ~default:true
   in
   (* further filter by whether TESTS will be enabled when the test is run *)

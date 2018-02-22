@@ -6,7 +6,7 @@ let opams =
 
 let dir =
   let doc = "directory in which to search for files.  If OPAM \
-	     has specified by the user, this will have no effect." in
+             has specified by the user, this will have no effect." in
   Cmdliner.Arg.(value & opt dir "." & info ["C"; "directory"] ~docv:"DIRECTORY" ~doc)
 
 let make_appveyor dir opams =
