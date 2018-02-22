@@ -10,19 +10,18 @@ let rec find_constraints ~needle = function
   | OpamFormula.Or (a, b) | OpamFormula.And (a, b) ->
     find_constraints ~needle a || find_constraints ~needle b
 
-let filter_build_only =
-  OpamFilter.filter_deps ~build:true ~post:false ~test:false ~doc:false ~dev:false ~default:false
-
 let depopt_names_of_opam opam =
   try
     OpamFile.OPAM.depopts opam |>
-    filter_build_only |>
+    OpamFilter.filter_deps ~build:true ~post:false ~test:true ~doc:false ~dev:false ~default:false |>
     OpamFormula.atoms |>
     List.map fst
   with Failure _ -> []
 
 let compilers_of_opam opam =
-  let depends = OpamFile.OPAM.depends opam |> filter_build_only in
+  let depends = OpamFile.OPAM.depends opam |>
+    OpamFilter.filter_deps ~build:true ~post:false ~test:false ~doc:false ~dev:false ~default:false
+  in
   (* first check to see whether any ocaml constraints exist at all. if there
        are none, `verifies` will always return false, so just filtering will
        incorrectly give the empty list in that case. *)

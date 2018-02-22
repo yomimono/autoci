@@ -1,7 +1,7 @@
 val depopt_names_of_opam : OpamFile.OPAM.t -> OpamPackage.Name.t list
 (** [depopt_names_of_opam opam] returns the list of optional dependencies
-    ("depopts") given in [opam].  It includes build-time dependencies but no
-    other filters. *)
+    ("depopts") given in [opam].  It includes dependencies tagged with `build`
+    and `test`, but no other filters. *)
 
 val compilers_of_opam : OpamFile.OPAM.t -> (string * OpamPackage.t) list
 (** [compilers_of_opam] returns the list of OCaml compiler versions that [opam]
