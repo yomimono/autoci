@@ -160,7 +160,7 @@ let test_info_to_assoc_list info =
   let str_of_revdepopts ~name acc = function
     | List [] -> acc
     | All -> (name, "*")::acc
-    | List l -> (name, Format.asprintf "@[\"%a\"] " pp_package_list l)::acc
+    | List l -> (name, Format.asprintf "@[%a@]" pp_package_list l)::acc
   in
   let maybe_add ~name ~v_printer v l = match v with
     | None -> l
