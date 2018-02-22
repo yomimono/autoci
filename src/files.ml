@@ -10,7 +10,7 @@ let discover_opams ~(dir : Fpath.t) =
        `exists_and_is_a_file` *)
     let c = List.filter (fun c -> Bos.OS.File.exists c |> Rresult.R.get_ok) c in
     Ok (List.filter (fun path ->
-	Bos.Pat.(matches (v "$(name).opam") (Fpath.basename path))) c)
+        Bos.Pat.(matches (v "$(name).opam") (Fpath.basename path))) c)
   in
   match aux () with
   | Ok l -> l

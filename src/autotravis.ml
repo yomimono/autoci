@@ -6,7 +6,7 @@ let opams =
 
 let dir =
   let doc = "directory in which to search for files.  If both OPAM and TRAVIS \
-	     have been specified by the user, this will have no effect." in
+             have been specified by the user, this will have no effect." in
   Cmdliner.Arg.(value & opt dir "." & info ["C"; "directory"] ~docv:"DIRECTORY" ~doc)
 
 let make_travis dir opams =
@@ -23,22 +23,22 @@ let make_travis dir opams =
     let package = Some (OpamPackage.Name.to_string @@ OpamFile.OPAM.name opam) in
     let depopts = Test.List (Opam.depopt_names_of_opam opam) in
     let compilers = List.map (fun a -> snd a |> OpamPackage.version_to_string) 
-	(Opam.compilers_of_opam opam) in
+        (Opam.compilers_of_opam opam) in
     List.map (fun compiler ->
-	Test.({revdeps = List [];
-	  distro = None;
-	  do_test = None;
-	  compiler = Some (Ocaml_version compiler);
-	  depopts;
-	  package;
-	 })) compilers
+        Test.({revdeps = List [];
+          distro = None;
+          do_test = None;
+          compiler = Some (Ocaml_version compiler);
+          depopts;
+          package;
+         })) compilers
   in
   let globals = Test.({ revdeps = List [];
-			  depopts = List [];
-			  distro = Some "ubuntu-16.04";
-			  do_test = None;
-			  compiler = None;
-			  package = None;}) in
+                          depopts = List [];
+                          distro = Some "ubuntu-16.04";
+                          do_test = None;
+                          compiler = None;
+                          package = None;}) in
   let tests = List.map tests opams |> List.flatten in
   let config = Test.({ pins; globals; tests; }) in
   let yaml = Travis.to_yaml config in
