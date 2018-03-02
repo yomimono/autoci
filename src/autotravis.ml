@@ -38,7 +38,7 @@ let make_travis dir opams =
   in
   let globals = Test.({ revdeps = List [];
                         depopts = List [];
-                        distro = Some "ubuntu-16.04";
+                        distro = Some "debian-stable";
                         do_test = None;
                         compiler = None;
                         package = None;}) in
