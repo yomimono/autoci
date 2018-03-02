@@ -73,7 +73,7 @@ let opam_with_name ~fpath opam =
    directory.
    get back a set of OpamFile.OPAM.t's which are guaranteed to have a populated
    `name` field.
-   any string which could not be made to fulfill that guarantee is discarded.
+   if any opam could not be opened or named, return an error message instead.
 *)
 let get_named_opams ~dir given_opams =
   let opams = match given_opams with
@@ -86,8 +86,9 @@ let get_named_opams ~dir given_opams =
       Files.parse_opam fpath >>= fun opam ->
       OpamFormatUpgrade.opam_file opam |> opam_with_name ~fpath
     in
-    match named_opam with
-    | Ok named_opam -> named_opam :: acc
-    | Error (`Msg s) ->
-      Printf.eprintf "Ignoring opam file %s because of error %s" (Fpath.to_string fpath) s; acc
-  ) [] opams
+    match named_opam, acc with
+    | Ok named_opam, Ok acc -> Ok (named_opam :: acc)
+    | Ok _, Error s -> Error s
+    | Error (`Msg s), Ok _ -> Error (`Msg s)
+    | Error (`Msg s), Error (`Msg acc) -> Error (`Msg (acc ^ "\n" ^ s))
+    ) (Ok []) opams

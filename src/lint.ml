@@ -25,7 +25,7 @@ let lint debug dir travis opams =
     Fmt.(list ~sep:comma (of_to_string OpamPackage.Name.to_string))
   in
   let dir = Fpath.v dir in (* straight outta Cmdliner.Arg.dir *)
-  let opams = Opam.get_named_opams ~dir opams in
+  Opam.get_named_opams ~dir opams >>= fun opams ->
   if debug then begin
     Format.printf "found some opams: %a\n"
       Fmt.(list ~sep:sp (of_to_string OpamFile.OPAM.write_to_string)) opams

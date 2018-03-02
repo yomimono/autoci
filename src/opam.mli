@@ -13,7 +13,8 @@ val has_build_tests : OpamFile.OPAM.t -> bool
 (** [has_build_tests opam] attempts to determine whether [opam] has any tests
     declared in its build stanzas (in other words, any "with-test" sections). *)
 
-val get_named_opams : dir:Fpath.t -> string list -> OpamFile.OPAM.t list
+val get_named_opams : dir:Fpath.t -> string list ->
+  (OpamFile.OPAM.t list, [ `Msg of string ] ) result
 (** [get_named_opams ~dir given_opams] will use information in [dir] to ascribe
     correct names to [given_opams], if [given_opams] is not the empty list.
     If [get_named_opams ~dir] is called with an empty list argument, [dir] will
