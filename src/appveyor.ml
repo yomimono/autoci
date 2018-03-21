@@ -1,3 +1,23 @@
+type port = | Msvc | Mingw (* there is also cygwin, but that isn't supported by ocaml-ci-scripts *)
+type width = | ThirtyTwo | SixtyFour
+type switch = {
+  version : OpamPackage.Version.t;
+  port : port;
+  width : width;
+  precompiled : bool;
+}
+
+type appveyor = {
+  switches : switch list;
+}
+
+let pp_switch fmt s =
+  let pp_port fmt = function | Msvc -> Fmt.pf fmt "msvc" | Mingw -> Fmt.pf fmt "mingw" in
+  let pp_width fmt = function | ThirtyTwo -> Fmt.pf fmt "32" | SixtyFour -> Fmt.pf fmt "64" in
+  let pp_precompiled fmt = function | false -> () | true -> Fmt.pf fmt "c" in
+  let pp_version fmt v = Fmt.pf fmt "%a" (Fmt.of_to_string OpamPackage.Version.to_string) v in
+  Fmt.pf fmt "%a+%a%a%a" pp_version s.version pp_port s.port pp_width s.width pp_precompiled s.precompiled
+
 let to_yaml config : Yaml.yaml =
   let open Yaml in
   let no_anchor s = {anchor = None; value = s} in
