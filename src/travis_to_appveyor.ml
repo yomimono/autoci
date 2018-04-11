@@ -15,9 +15,9 @@ let switch_of_version t =
     (* TODO: variants will break the logic here, if they are ever supported in travis *)
     | _major::_minor::_patch::_ -> Ok (Some (Opam_switch (s ^ "+mingw64c")))
     | major::minor::_ -> begin
-      match List.assoc_opt (major ^ "." ^ minor) Test.known_compilers with
-        | None -> Error (`Msg ("Could not figure out the correct OPAM_SWITCH for compiler " ^ s ^ " - perhaps it should be added to the known_compilers table"))
-        | Some package -> Ok (Some (Opam_switch
+      match List.assoc (major ^ "." ^ minor) Test.known_compilers with
+        | exception Not_found -> Error (`Msg ("Could not figure out the correct OPAM_SWITCH for compiler " ^ s ^ " - perhaps it should be added to the known_compilers table"))
+        | package -> Ok (Some (Opam_switch
                   ((OpamPackage.version_to_string package) ^ "+mingw64c")))
     end
     | _ -> Error (`Msg ("OCAML_VERSION " ^ s ^ " did not resemble any compiler version with a known conversion to OPAM_SWITCH"))

@@ -25,19 +25,19 @@ let of_yaml yaml =
      To reflect the actual behavior, the last writer should win. *)
   let extract_tests m =
     (* for any string other than "false", TESTS are true *)
-    match Astring.String.Map.find_opt "TESTS" m with
+    match Astring.String.Map.find "TESTS" m with
     | None -> None
     | Some v -> Some (not (Astring.String.equal v "false"))
   in
   let extract_revdepopts s m =
-    match Astring.String.Map.find_opt s m with
+    match Astring.String.Map.find s m with
     | None -> Test.List []
     | Some depopts when 0 = Astring.String.compare depopts "*" -> All
     | Some depopts ->
       List (List.map OpamPackage.Name.of_string @@ Astring.String.fields depopts)
   in
   let extract_package m =
-    match Astring.String.Map.find_opt "PACKAGE" m with
+    match Astring.String.Map.find "PACKAGE" m with
     | None -> None
     | Some package -> match Astring.String.cut ~sep:"." package with
       | Some (name, _) -> Some name
@@ -45,13 +45,13 @@ let of_yaml yaml =
   in
   let test_of_entry e =
     {
-      Test.distro = Astring.String.Map.find_opt "DISTRO" e;
+      Test.distro = Astring.String.Map.find "DISTRO" e;
       do_test = extract_tests e;
       depopts = extract_revdepopts "DEPOPTS" e;
       revdeps = extract_revdepopts "REVDEPS" e;
       package = extract_package e;
       compiler =
-        match Astring.String.Map.find_opt "OCAML_VERSION" e, Astring.String.Map.find_opt "OPAM_SWITCH" e with
+        match Astring.String.Map.find "OCAML_VERSION" e, Astring.String.Map.find "OPAM_SWITCH" e with
         | None, None -> None
         | Some a, None -> Some (Ocaml_version a)
         | None, Some a -> Some (Opam_switch a)
@@ -64,10 +64,11 @@ let of_yaml yaml =
     with Failure _ -> Error (`Msg "An OCAML_VERSION must be set for each entry in the matrix")
   in
   let find_list ~needle haystack =
-    List.find_opt (fun (anchor, _) -> 0 = String.compare anchor.Yaml.value needle)
-      haystack |> function
-    | None -> error_msg (Format.asprintf "%s must be provided" needle)
-    | Some (_anchor, yaml) -> Ok yaml
+    match
+      List.find (fun (anchor, _) -> 0 = String.compare anchor.Yaml.value needle)
+      haystack with
+    | exception Not_found -> error_msg (Format.asprintf "%s must be provided" needle)
+    | (_anchor, yaml) -> Ok yaml
   in
   let top_level_search ~needle top_level_yaml =
     match top_level_yaml with
@@ -96,7 +97,7 @@ let of_yaml yaml =
       | None -> OpamPackage.Name.of_string s
       | Some (name, _) -> OpamPackage.Name.of_string name
     in
-    match Astring.String.Map.find_opt "PINS" map with
+    match Astring.String.Map.find "PINS" map with
     | None -> []
     | Some pins ->
       (* value is (we hope) a space-separated list of key-value pairs,
