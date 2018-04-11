@@ -1,8 +1,3 @@
-let travis =
-  let doc = "Travis file to consult for configuration.  If not provided, look for \
-             a .travis.yml in the current directory." in
-  Cmdliner.Arg.(value & opt non_dir_file ".travis.yml" & info ["travis"] ~docv:"TRAVIS" ~doc)
-
 let switch_of_version t =
   let open Test in
   let with_opam_switch = function
@@ -43,17 +38,3 @@ let make_appveyor travis =
   let config = { Test.pins = config.pins; globals; tests; } in
   Appveyor.to_yaml config |> Yaml.yaml_to_string >>= fun yaml ->
   Ok yaml
-
-let make_t = Cmdliner.Term.(const make_appveyor $ travis)
-let make_info =
-  let doc = "Make Appveyor configuration automatically from an existing travis configuration" in
-  Cmdliner.Term.(info ~version:"%%VERSION%%" ~doc "travis_to_appveyor")
-
-let () =
-  let open Cmdliner.Term in
-  match eval (make_t, make_info) with
-      | `Ok (Error (`Msg e)) -> Printf.eprintf "%s\n%!" e; exit_status (`Ok 1)
-      | `Ok (Ok s) -> Printf.printf "%s%!" s; exit_status (`Ok 0)
-      | `Error _ as a -> exit_status a
-      | `Version -> exit_status `Version
-      | `Help -> exit_status `Help

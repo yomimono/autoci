@@ -14,16 +14,16 @@ A few tools for automatically handling cloud CI tests for projects that use `opa
 
 ## How do I use it?
 
-Command-line tools expose a `--help` option which is most likely to be up-to-date.  The binaries which currently exist are:
-  * `autotravis` for automatically generating Travis CI configurations from opam files
-  * `autoappveyor` for automatically generating Appveyor configurations from opam files
-  * `travis-to-appveyor` for generating Appveyor configurations from Travis configurations
+The top-level `autoci` command-line tool exposes a `--help` option which is most likely to be up-to-date.  The subcommands which currently exist are:
+  * `travis` for automatically generating Travis CI configurations from opam files
+  * `appveyor` for automatically generating Appveyor configurations from opam files
+  * `travis_to_appveyor` for generating Appveyor configurations from Travis configurations
   * `lint` for checking whether Travis CI configurations are sensible
 
-Both tools can take arguments for `opam` files and cloud CI configurations to consider; if those arguments are omitted, they will attempt to discover them in the current directory.  For example, one might use `autotravis` to generate a Travis CI configuration for `autoci` itself:
+Both tools can take arguments for `opam` files and cloud CI configurations to consider; if those arguments are omitted, they will attempt to discover them in the current directory.  For example, one might use `autoci travis` to generate a Travis CI configuration for `autoci` itself:
 
 ```
-🐫  ~/autoci$ _build/default/src/autotravis.exe 
+🐫  ~/autoci$ _build/default/src/autoci.exe travis 
 language: c
 install: wget https://raw.githubusercontent.com/ocaml/ocaml-ci-scripts/master/.travis-docker.sh
 script: bash -ex .travis-docker.sh
@@ -32,7 +32,7 @@ services:
 env:
   global:
   - PINS="autoci:."
-  - DISTRO="ubuntu-16.04"
+  - DISTRO="debian-stable"
   matrix:
   - PACKAGE="autoci" OCAML_VERSION="4.03.0"
   - PACKAGE="autoci" OCAML_VERSION="4.04.2"
@@ -43,6 +43,6 @@ env:
 or use `lint` to check whether a complex project is testing everything it should be:
 
 ```
-🐫  ~/mirage-net-xen$ ~/autoci/_build/default/src/lint.exe 
+🐫  ~/mirage-net-xen$ ~/autoci/_build/default/src/autoci.exe lint
 Packages whose installation is not tested (add them to the matrix): netchannel
 ```

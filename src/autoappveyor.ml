@@ -1,14 +1,3 @@
-let opams =
-  let doc = "opam files to consider when generating the CI configurations. \
-             By default, any .opam file in the current directory will be considered. \
-             Specifying any opam file manually will restrict the set to those specified." in
-  Cmdliner.Arg.(value & opt_all non_dir_file [] & info ["opam"] ~docv:"OPAM" ~doc)
-
-let dir =
-  let doc = "directory in which to search for files.  If OPAM \
-             was specified by the user, this will have no effect." in
-  Cmdliner.Arg.(value & opt dir "." & info ["C"; "directory"] ~docv:"DIRECTORY" ~doc)
-
 let make_appveyor dir opams =
   let open Rresult.R in
   let dir = Fpath.v dir in
@@ -58,17 +47,3 @@ let make_appveyor dir opams =
   in
   Yaml.yaml_to_string (Appveyor.to_yaml config) >>= fun yaml ->
   Ok yaml
-
-let make_t = Cmdliner.Term.(const make_appveyor $ dir $ opams)
-let make_info =
-  let doc = "Make Appveyor configuration automatically by consulting opam file(s)." in
-  Cmdliner.Term.(info ~version:"%%VERSION%%" ~doc "autoappveyor")
-
-let () =
-  let open Cmdliner.Term in
-  match eval (make_t, make_info) with
-      | `Ok (Error (`Msg e)) -> Printf.eprintf "%s\n%!" e; exit_status (`Ok 1)
-      | `Ok (Ok s) -> Printf.printf "%s%!" s; exit_status (`Ok 0)
-      | `Error _ as a -> exit_status a
-      | `Version -> exit_status `Version
-      | `Help -> exit_status `Help

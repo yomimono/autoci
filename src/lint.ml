@@ -1,25 +1,4 @@
-(* CI linter, aware of both opam files and travis configurations. *)
-let opams =
-  let doc = "opam files to consider when linting. \
-             By default, any .opam file in the current directory will be considered. \
-             Specifying any opam file manually will restrict the set to those specified." in
-  Cmdliner.Arg.(value & opt_all file [] & info ["opam"] ~docv:"OPAM" ~doc)
-
-let travis =
-  let doc = "yaml file containing Test configuration to consider when linting." in
-  Cmdliner.Arg.(value & opt file ".travis.yml" & info ["travis"]
-                  ~docv:"TRAVIS" ~doc)
-
-let dir =
-  let doc = "directory in which to search for files.  If both OPAM and TRAVIS \
-             have been specified by the user, this will have no effect." in
-  Cmdliner.Arg.(value & opt dir "." & info ["C"; "directory"] ~docv:"DIRECTORY" ~doc)
-
-let debug =
-  let doc = "print messages about passing tests, as well as failing ones." in
-  Cmdliner.Arg.(value & flag & info ["d"] ~doc)
-
-let lint debug dir travis opams =
+let lint debug dir travis opams : (unit, [`Msg of string]) result =
   let open Rresult.R in
   let pp_list_of_packages =
     Fmt.(list ~sep:comma (of_to_string OpamPackage.Name.to_string))
@@ -65,16 +44,7 @@ let lint debug dir travis opams =
       | Ok (), Ok () -> Ok ()) (Ok ())
     [packages_in_matrix; packages_tested; test_deps_have_tests]
 
-let lint_t = Cmdliner.Term.(const lint $ debug $ dir $ travis $ opams)
-let lint_info =
-  let doc = "Check CI configuration against opam, and warn on inconsistencies." in
-  Cmdliner.Term.(info ~version:"%%VERSION%%" ~doc "lint")
-
-let () =
-  let open Cmdliner.Term in
-  match eval (lint_t, lint_info) with
-      | `Ok (Error (`Msg e)) -> Printf.eprintf "%s\n%!" e; exit_status (`Ok 1)
-      | `Ok (Ok ()) -> exit_status (`Ok 0)
-      | `Error _ as a -> exit_status a
-      | `Version -> exit_status `Version
-      | `Help -> exit_status `Help
+let term_ready debug dir travis opams =
+  match lint debug dir travis opams with
+  | Ok () -> Ok "No errors detected."
+  | Error e -> Error e
