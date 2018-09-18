@@ -30,15 +30,16 @@ let known_compilers =
   let ocaml = OpamPackage.Name.of_string "ocaml" in
   let package v = OpamPackage.(create ocaml (Version.of_string v)) in
   [
-    "3.12", package "3.12.1"; (* possibly we should remove this *)
-    "4.00", package "4.00.1";
-    "4.01", package "4.01.0";
-    "4.02", package "4.02.3"; (* another sensible line to draw would be
+    "3.12", package "3.12"; (* possibly we should remove this *)
+    "4.00", package "4.00";
+    "4.01", package "4.01";
+    "4.02", package "4.02"; (* another sensible line to draw would be
                                  not including this or any earlier versions *)
-    "4.03", package "4.03.0";
-    "4.04", package "4.04.2";
-    "4.05", package "4.05.0";
-    "4.06", package "4.06.0";
+    "4.03", package "4.03";
+    "4.04", package "4.04";
+    "4.05", package "4.05";
+    "4.06", package "4.06";
+    "4.07", package "4.07";
   ]
 
 (* circumstances that can lead to a package being installed:
