@@ -20,6 +20,6 @@ depends: [
   "fpath"
   "opam-format"
   "opam-state"
-  "yaml"
+  "yaml" {< "2.0.0"}
 ]
 available: [ocaml-version >= "4.03.0"]
