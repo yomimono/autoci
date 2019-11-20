@@ -54,7 +54,7 @@ let travis_to_appveyor_info =
 
 let autoci_t =
   let always_help : type k.k Term.ret =
-    Term.(Manpage.(`Help (`Auto, Some "autoci")))
+    `Help (`Auto, Some "autoci")
   in
   Term.(ret @@ const @@ always_help)
 
