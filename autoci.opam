@@ -7,11 +7,11 @@ license: "MIT"
 homepage: "https://github.com/yomimono/autoci"
 bug-reports: "https://github.com/yomimono/autoci/issues"
 build: [
-  ["jbuilder" "build" "-p" name ]
+  ["dune" "build" "-p" name "-j" jobs ]
 ]
 dev-repo: "git+https://github.com/yomimono/autoci.git"
 depends: [
-  "jbuilder" {build}
+  "dune" {build & >= "1.0"}
   "topkg-jbuilder" {build}
   "astring"
   "bos"

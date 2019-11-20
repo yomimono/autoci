@@ -8,13 +8,13 @@ doc:          "https://mirage.github.io/mirage-qubes"
 license:      "BSD-2-Clause"
 
 build: [
-  [ "jbuilder" "subst"] {pinned}
-  [ "jbuilder" "build" "-p" name "-j" jobs ]
+  [ "dune" "subst"] {pinned}
+  [ "dune" "build" "-p" name "-j" jobs ]
 ]
 
 depends: [
   "ocamlfind" {build}
-  "jbuilder"  {build & >="1.0+beta9"}
+  "dune"  {build & >= "1.0"}
   "cstruct" { >= "1.9.0" }
   "vchan-xen"
   "xen-evtchn"

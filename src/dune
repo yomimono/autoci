@@ -1,0 +1,40 @@
+(executable
+ (name autoci)
+ (public_name autoci)
+ (libraries astring bos cmdliner fpath fmt opam-format opam-state yaml))
+
+(alias
+ (name runtest)
+ (deps
+  autoci.exe
+  (source_tree ../test))
+ (action
+  (progn
+   (run %{exe:autoci.exe} travis -C ../test/no-tests)
+   (run %{exe:autoci.exe} travis -C ../test/package-not-in-matrix)
+   (run %{exe:autoci.exe} travis -C ../test/tests-not-built)
+   (run %{exe:autoci.exe} travis -C ../test/tests-not-run)
+   (run %{exe:autoci.exe} travis -C ../test/has-depopts)
+   (system "./autoci.exe travis -C ../test/no-opam || true")
+   (run %{exe:autoci.exe} appveyor -C ../test/no-tests)
+   (run %{exe:autoci.exe} appveyor -C ../test/package-not-in-matrix)
+   (run %{exe:autoci.exe} appveyor -C ../test/tests-not-built)
+   (run %{exe:autoci.exe} appveyor -C ../test/tests-not-run)
+   (run %{exe:autoci.exe} appveyor -C ../test/has-depopts)
+   (system "./autoci.exe appveyor -C ../test/no-opam || true")
+   (run %{exe:autoci.exe} travis_to_appveyor --travis
+     ../test/no-tests/.travis.yml)
+   (run %{exe:autoci.exe} travis_to_appveyor --travis
+     ../test/package-not-in-matrix/.travis.yml)
+   (run %{exe:autoci.exe} travis_to_appveyor --travis
+     ../test/tests-not-built/.travis.yml)
+   (run %{exe:autoci.exe} travis_to_appveyor --travis
+     ../test/tests-not-run/.travis.yml)
+   (system
+     "./autoci.exe travis_to_appveyor --travis ../test/has-depopts/.travis.yml || true")
+   (system "./autoci.exe lint -C ../test/no-tests || true")
+   (system "./autoci.exe lint -C ../test/package-not-in-matrix || true")
+   (system "./autoci.exe lint -C ../test/tests-not-built || true")
+   (system "./autoci.exe lint -C ../test/tests-not-run || true")
+   (system "./autoci.exe lint -C ../test/has-depopts || true")
+   (system "./autoci.exe lint -C ../test/no-opam || true"))))
