@@ -2,13 +2,14 @@ let to_yaml t =
   let open Yaml in
   let default_install = "wget https://raw.githubusercontent.com/ocaml/ocaml-ci-scripts/master/.travis-docker.sh" in
   let default_script = "bash -ex .travis-docker.sh" in
-  let no_anchor s = {anchor = None; value = s} in
-  let language = (no_anchor "language", `String (no_anchor "c")) in
-  let install = (no_anchor "install", `String (no_anchor default_install)) in
-  let script = (no_anchor "script", `String (no_anchor default_script)) in
-  let services = (no_anchor "services", `A [`String (no_anchor "docker")]) in
+  let no_anchor s =
+    {anchor = None; value = s; plain_implicit = true; quoted_implicit = true; tag = None; style = `Any} in
+  let language = (no_anchor "language", `Scalar (no_anchor "c")) in
+  let install = (no_anchor "install", `Scalar (no_anchor default_install)) in
+  let script = (no_anchor "script", `Scalar (no_anchor default_script)) in
+  let services = (no_anchor "services", `A [`Scalar (no_anchor "docker")]) in
   let env_children name l =
-    (no_anchor name, `A (List.map (fun s -> `String (no_anchor s)) l)) in
+    (no_anchor name, `A (List.map (fun s -> `Scalar (no_anchor s)) l)) in
   let yaml_globals = env_children "global" @@
     Test.(Fmt.strf "%a" pp_pins t.pins) :: Test.(match test_info_to_var_string t.globals with
       | "" -> []
@@ -72,19 +73,19 @@ let of_yaml yaml =
   in
   let top_level_search ~needle top_level_yaml =
     match top_level_yaml with
-    | `String _ | `Alias _ | `A _ -> error_msg "top level of YAML must be an object"
+    | `Scalar _ | `Alias _ | `A _ -> error_msg "top level of YAML must be an object"
     | `O items ->
       find_list ~needle items
   in
   let get_env_strings ~section (top_level_yaml : Yaml.yaml) =
     top_level_search ~needle:"env" top_level_yaml >>= function
-    | `String _ | `Alias _ | `A _ -> error_msg "env must have an object child"
+    | `Scalar _ | `Alias _ | `A _ -> error_msg "env must have an object child"
     | `O env_contents -> find_list ~needle:section env_contents >>= function
-      | `String _ | `Alias _ | `O _ ->
+      | `Scalar _ | `Alias _ | `O _ ->
         error_msg (Format.asprintf "%s must have an array child" section)
       | `A contents -> Ok (List.fold_left (function acc -> function
           | `Alias _ | `A _ | `O _ -> acc
-          | `String s ->
+          | `Scalar s ->
             match Parse_env.parse_env s.Yaml.value with
             | None -> []
             | Some map -> map :: acc) [] contents |> List.rev)

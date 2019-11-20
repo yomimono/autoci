@@ -20,9 +20,10 @@ let pp_switch fmt s =
 
 let to_yaml config : Yaml.yaml =
   let open Yaml in
-  let no_anchor s = {anchor = None; value = s} in
-  let yaml_array ~name items = no_anchor name, `A (List.map (fun p -> `String (no_anchor p)) items) in
-  let yaml_assoc_list = List.map (fun (name, value) -> (no_anchor name, `String (no_anchor value))) in
+  let no_anchor s =
+    {anchor = None; value = s; plain_implicit = true; quoted_implicit = true; tag = None; style = `Any} in
+  let yaml_array ~name items = no_anchor name, `A (List.map (fun p -> `Scalar (no_anchor p)) items) in
+  let yaml_assoc_list = List.map (fun (name, value) -> (no_anchor name, `Scalar (no_anchor value))) in
   let platforms = [ "x86" ] in
   let install = [
     ("ps", "iex ((new-object net.webclient).DownloadString(\"https://raw.githubusercontent.com/$env:FORK_USER/ocaml-ci-scripts/$env:FORK_BRANCH/appveyor-install.ps1\"))");

@@ -8,13 +8,13 @@ tags:         "org:mirage"
 license:      "ISC"
 
 build: [
-  ["jbuilder" "subst" "-p" name "--name" name] {pinned}
-  ["jbuilder" "build" "-p" name "-j" jobs]
+  ["dune" "subst"] {pinned}
+  ["dune" "build" "-p" name "-j" jobs]
 ]
-build-test: ["jbuilder" "runtest" "-p" name]
+build-test: ["dune" "runtest" "-p" name "-j" jobs]
 
 depends: [
-  "jbuilder" {build & >="1.0+beta9"}
+  "dune" {build & >= "1.0"}
   "ppx_sexp_conv" {build}
   "cstruct"          {>= "3.0.0"}
   "mirage-types-lwt" {>= "3.0.0"}
